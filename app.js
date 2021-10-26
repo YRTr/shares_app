@@ -1,10 +1,12 @@
 const path = require('path');
 const express = require('express');
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
 const passport = require('passport');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const connectDB = require('./config/db')
 
 // load config
@@ -27,10 +29,14 @@ app.engine('.hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 
 // sessions
-app.use(session({
-    secret: 'anonymous',
-    resave: false,
-    saveUninitialized: false
+app.use(
+    session({
+        secret: 'anonymous',
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: 'mongodb+srv://yrt369:yrt369@shares0.fsq6e.mongodb.net/shares_app?retryWrites=true&w=majority',
+        })
 }))
 
 // passport middleware
